@@ -90,7 +90,9 @@ body {
   a {
     display: block;
     width: 100%;
-    transition: background 150ms var(--transition-timing);
+    transition: 
+      background 150ms var(--transition-timing),
+      color 150ms var(--transition-timing);
     pointer-events: all;
     text-decoration: none;
     color: var(--color-text-primary);
@@ -109,7 +111,6 @@ body {
 
       &:hover {
         background: var(--color-primary);
-        color: var(--color-text-inverse);
         cursor: not-allowed;
         opacity: 0.55;
         filter: grayscale(0.25);
@@ -275,6 +276,25 @@ body {
         color: var(--color-error);
         visibility: visible;
       }
+    }
+  }
+}
+
+.formStatus {
+  p {
+    padding: 0.75rem 1rem;
+    border-radius: 0.875rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    &.error { 
+      background-color: var(--color-error);
+      color: var(--color-text-inverse)
+    }
+
+    &.success { 
+      background-color: var(--color-success);
+      color: var(--color-text-inverse)
     }
   }
 }
