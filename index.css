@@ -1,39 +1,57 @@
 #whyyyyyyyyyy {
   display: grid;
-  justify-content: center;
-  align-items: start;
-  column-gap: 6rem;
-  row-gap: 0.75rem;
-  grid-template-columns: repeat(3, 18rem);
-  grid-template-rows: repeat(3, auto);
-  grid-auto-flow: row;
+  grid-template-columns: 1fr;
+  row-gap: 1rem;
+  padding: 1rem;
+
+  @media (min-width: 1024px) {
+    justify-content: center;
+    align-items: start;
+    column-gap: 6rem;
+    row-gap: 0.75rem;
+
+    grid-template-columns: repeat(3, 18rem);
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: row;
+  }
 
   div {
-    grid-row-start: 1;
-    grid-row-end: 4;
-    padding: 2rem;
+    padding: 1.5rem;
     display: grid;
-    /* grid-template-columns: 14rem; */
-    grid-template-rows: subgrid;
+    grid-template-rows: auto auto 1fr;
+    gap: 0.75rem;
+
     background: var(--color-surface);
     width: full;
-    height: 100%;
     place-items: center;
+    text-align: center;
 
-    
+    @media (min-width: 1024px) {
+      grid-row: 1 / 4;
+      padding: 2rem;
+      height: 100%;
+
+      grid-template-rows: auto auto 1fr;
+    }
+
     svg {
-      
+      @media (max-width: 1024px) {
+        max-width: 4rem;
+        height: auto;
+      }
     }
 
     h3 {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 600;
-      text-align: center;
+
+      @media (min-width: 1024px) {
+        font-size: 1.6rem;
+      }
     }
 
     span {
       font-size: 1.2rem;
-
     }
   }
 }
