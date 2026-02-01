@@ -1,0 +1,39 @@
+#whyyyyyyyyyy {
+  display: grid;
+  justify-content: center;
+  align-items: start;
+  column-gap: 6rem;
+  row-gap: 0.75rem;
+  grid-template-columns: repeat(3, 18rem);
+  grid-template-rows: repeat(3, auto);
+  grid-auto-flow: row;
+
+  div {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    padding: 2rem;
+    display: grid;
+    /* grid-template-columns: 14rem; */
+    grid-template-rows: subgrid;
+    background: var(--color-surface);
+    width: full;
+    height: 100%;
+    place-items: center;
+
+    
+    svg {
+      
+    }
+
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    span {
+      font-size: 1.2rem;
+
+    }
+  }
+}
