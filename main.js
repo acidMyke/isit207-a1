@@ -37,6 +37,13 @@ function setFormStatus(status, type = 'error', el) {
   }
 }
 
+/** @param {Account} */
+function setCurrentAccount(account) {
+  currentAccount = account;
+}
+
+function redirectAfterLogin() {}
+
 /**
  *
  * @param {SubmitEvent} event
@@ -54,17 +61,17 @@ function processLogin(event) {
   }
 
   for (let xAcc of accounts) {
-    if (xAcc.name === namail || xAcc.email === namail) {
+    if (
+      (xAcc.name === namail || xAcc.email === namail) &&
+      xAcc.password === password
+    ) {
       setCurrentAccount(xAcc);
+      redirectAfterLogin();
+      return;
     }
   }
 
-  setFormStatus('Account not found');
-}
-
-/** @param {Account} */
-function setCurrentAccount(account) {
-  currentAccount = account;
+  setFormStatus('Invalid credentials');
 }
 
 /**
@@ -90,6 +97,12 @@ function processSignUp(event) {
       return;
     }
   }
+
+  const acc = { name, email, password };
+
+  accounts.push(acc);
+  setCurrentAccount(acc);
+  redirectAfterLogin();
 }
 
 class AppNavCompoenent extends HTMLElement {
