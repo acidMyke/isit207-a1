@@ -31,19 +31,29 @@
     <main id="login_page">
       <section class="login_card">
         <div class="login_title">
-          <h1>Welcome back</h1>
+          <h1>Welcome</h1>
         </div>
 
-        <form style="display: grid; gap: 1.25rem;" onsubmit="processLogin(event)">
+        <form
+          style="display: grid; gap: 1.25rem"
+          onsubmit="processLogin(event)"
+        >
           <div class="formfield">
-            <label for="namail">Name/Email</label>
+            <label for="name">Name</label>
+            <input id="name" name="name" placeholder="you" required />
+            <p>Required</p>
+          </div>
+
+          <div class="formfield">
+            <label for="email">Email</label>
             <input
-              id="namail"
-              name="namail"
-              placeholder="you/you@example.com"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
               required
             />
-            <p>Required</p>
+            <p>Please include an '@' in the email address!</p>
           </div>
 
           <div class="formfield">
@@ -61,12 +71,12 @@
 
           <div class="formStatus"></div>
 
-          <button class="btn-action-gradient" type="submit">Sign in</button>
+          <button class="btn-action-gradient" type="submit">Sign up</button>
         </form>
 
         <div class="login_footer">
-          <span>Don't have an account?</span>
-          <a href="/sign-up.html" class="btn-link inline"><strong>Sign up</strong></a>
+          <span>Have an account?</span>
+          <a href="/login.html" class="btn-link inline"><strong>Login</strong></a>
         </div>
       </section>
     </main>

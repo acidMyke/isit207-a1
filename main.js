@@ -91,3 +91,61 @@ function processSignUp(event) {
     }
   }
 }
+
+class AppNavCompoenent extends HTMLElement {
+  constructor() {
+    super();
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.innerHTML = `
+    <link rel="stylesheet" href="/common.css" />
+    <header class="site-header">
+      <nav class="nav">
+        <a href="index.html" id="logo" style="view-transition-name: logo">
+          <img src="/images/logo.webp" alt="Car Rental Logo" />
+        </a>
+
+        <input type="checkbox" id="nav-toggle" />
+        <label for="nav-toggle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-menu-icon lucide-menu hamburger"
+          >
+            <path d="M4 5h16" />
+            <path d="M4 12h16" />
+            <path d="M4 19h16" />
+          </svg>
+        </label>
+
+        <ul id="menu" style="view-transition-name: nav">
+          <li id="nav-home"><a href="index.html">Home</a></li>
+          <li id="nav-about"><a href="about.html">About Us</a></li>
+          <li id="nav-auth"><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </header>`;
+  }
+
+  connectedCallback() {
+    const currentPath =
+      window.location.pathname.split('/').pop() || 'index.html';
+
+    const links = this.shadowRoot.querySelectorAll('li > a');
+
+    links.forEach(link => {
+      const li = link.parentElement;
+      const linkPath = link.getAttribute('href');
+
+      li.classList.toggle('active', linkPath === currentPath);
+    });
+  }
+}
+
+customElements.define('app-nav', AppNavCompoenent);
