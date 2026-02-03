@@ -4,19 +4,60 @@
   max-width: 1440px;
   background-repeat: no-repeat;
   background-size: cover;
-  
+
   @media (max-width: 720px) {
     background-position: calc((720px - 100vw) / 712px * -16rem);
   }
 
+  font-size: 1.8rem;
   margin: 0px auto;
+  padding: 1rem;
   display: grid;
-  gridtem
-  
+  grid-auto-rows: 1fr 1fr;
+  grid-auto-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    '. .'
+    '. .'
+    'glass glass';
+  align-content: end;
 
+  @media (min-width: 1080px) {
+    grid-template-areas:
+      '. .'
+      '. glass'
+      '. .';
+
+    & > div {
+      width: min-content;
+      height: unset;
+    }
+  }
 
   & > div {
-    display: grid;
+    grid-area: glass;
+    display: flex;
+    flex-flow: column nowrap;
+    background: rgba(0, 0, 0, 0.25);
+
+    backdrop-filter: blur(10px);
+
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    color: white;
+    text-align: center;
+    height: min-content;
+    text-shadow: 2px 2px 4px #000000;
+  }
+
+  h1 {
+    grid-area: head;
+    white-space: nowrap;
+    font-size: 1.8rem;
+    @media (min-width: 560px) {
+      font-size: 3.6rem;
+    }
   }
 
   button {
