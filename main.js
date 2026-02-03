@@ -44,7 +44,14 @@ function setCurrentAccount(account) {
   saveToLocalStorage();
 }
 
-function redirectAfterLogin() {}
+function getRedirectUrl() {
+  const params = new URLSearchParams(location.search);
+  return params.get('redirect') ?? 'index.html';
+}
+
+function redirectAfterLogin() {
+  location.href = getRedirectUrl();
+}
 
 /**
  *
@@ -115,6 +122,7 @@ function processLogout(event) {
   event.preventDefault();
   currentAccount = null;
   saveToLocalStorage();
+  redirectAfterLogin();
 }
 
 function initFromLocalStorage() {
@@ -134,7 +142,9 @@ function initFromLocalStorage() {
 }
 
 function saveToLocalStorage() {
-  currentAccount.loginMs = new Date().getTime();
+  if (currentAccount) {
+    currentAccount.loginMs = new Date().getTime();
+  }
   const dynamicData = { accounts, currentAccount };
   localStorage.setItem('dynamicData', JSON.stringify(dynamicData));
 }
@@ -176,6 +186,7 @@ class AppNavCompoenent extends HTMLElement {
           <li><a href="about.html">About Us</a></li>
           <li class="publiconly"><a href="login.html">Login</a></li>
           <li class="publiconly"><a href="sign-up.html">Sign Up</a></li>
+          <li class="loginonly"><a href="reserve.html">Reserve</a></li>
           <li class="loginonly"><a href="history.html">History</a></li>
           <li class="loginonly"><a href="return.html">Return</a></li>
           <li class="loginonly"><a href="#" onclick="processLogout(event)">Log out</a></li>
@@ -189,6 +200,7 @@ class AppNavCompoenent extends HTMLElement {
     if (currentAccount) {
       const menuEl = this.shadowRoot.getElementById('menu');
       menuEl?.setAttribute('data-isLoggedIn', 'true');
+      document.body.setAttribute('data-isLoggedIn', 'true');
     }
     const currentPath =
       window.location.pathname.split('/').pop() || 'index.html';
@@ -200,6 +212,13 @@ class AppNavCompoenent extends HTMLElement {
       const linkPath = link.getAttribute('href');
 
       li.classList.toggle('active', linkPath === currentPath);
+
+      if (['login.html', 'sign-up.html'].includes(linkPath)) {
+        link.setAttribute(
+          'href',
+          linkPath + '?redirect=' + encodeURIComponent(currentPath),
+        );
+      }
     });
   }
 }
