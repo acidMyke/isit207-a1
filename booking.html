@@ -30,7 +30,35 @@
     <app-nav></app-nav>
     <main>
       <h1>Booking Page</h1>
+      <form onsubmit="processBooking(event)">
+        <div class="accordion">
+          <input
+            type="radio"
+            id="accSection0"
+            name="accordion-control"
+            checked="checked"
+          />
+          <div class="accordion-title">Step1: Select account</div>
+          <div class="accordion-content">
+            Testing the overly complicated accordion
 
+            <label for="accSection1" class="block btn-primary"> Next </label>
+          </div>
+        </div>
+        <div class="accordion">
+          <input type="radio" id="accSection1" name="accordion-control" />
+          <div class="accordion-title">Step1: Select vehicle</div>
+          <div class="accordion-content">
+            Testing the overly complicated accordion for section 2
+
+            <label for="accSection0" class="block btn-primary"> Back </label>
+            <label for="accSection2" class="block btn-primary"> Next </label>
+          </div>
+        </div>
+        <div class="accordion">
+          <input type="radio" id="accSection2" name="accordion-control" />
+        </div>
+      </form>
     </main>
   </body>
 </html>
