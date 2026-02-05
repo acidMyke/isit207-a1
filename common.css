@@ -137,13 +137,13 @@ body {
 
 body[data-isLoggedIn='true'] {
   .publiconly {
-    display: none;
+    display: none !important;
   }
 }
 
 body:not([data-isLoggedIn='true']) {
   .loginonly {
-    display: none;
+    display: none !important;
   }
 }
 

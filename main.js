@@ -304,6 +304,9 @@ customElements.define('app-nav', AppNavCompoenent);
 
 function renderCarGrid() {
   const carGrid = document.getElementById('car-grid');
+  if (!carGrid) {
+    return;
+  }
   for (let car of carListing) {
     const carOptionEl = document.createElement('div');
     const { id, brand, imagePath, model, price } = car;
