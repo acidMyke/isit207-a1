@@ -17,6 +17,18 @@
  * @property {string} imagePath
  */
 
+/**
+ * @typedef {Object} Booking
+ * @property {number} carId
+ * @property {string} userId
+ * @property {string} datetimeform
+ * @property {string} dateto
+ * @property {string} last4cc
+ * @property {number} total
+ * @property {number?} penalty
+ * @property {string[]} photos
+ */
+
 /** @type {Car[]} */
 let carListing = [
   {
@@ -78,11 +90,14 @@ let accounts = [];
 /** @type {Account | null} */
 let currentAccount = null;
 
+/** @type {Booking[]} */
+let bookings = [];
+
 /**
  *
  * @param {string | string[]} status
  * @param {'error' | 'success'} type
- * @param {HTMLElement} el
+ * @param {HTMLElement?} el
  */
 function setFormStatus(status, type = 'error', el) {
   /** @type {HTMLDivElement | null} */
@@ -223,6 +238,7 @@ function initFromLocalStorage() {
   } catch {}
   renderCarGrid();
   initializeCarCheckout();
+  setInterval(() => saveToLocalStorage(), 20_000);
 }
 
 function saveToLocalStorage() {
@@ -337,13 +353,121 @@ function renderCarGrid() {
 }
 
 function initializeCarCheckout() {
-  if (location.pathname !== '/checkout.html') {
+  const caridInput = /** @type {HTMLInputElement | null} */ (
+    document.getElementById('carid')
+  );
+  if (!caridInput) {
     return;
   }
   const params = new URLSearchParams(location.search);
-  const carid = params.get('carid');
-  console.log({ carid });
-  if (!carid) {
+  const caridStr = params.get('carid');
+  if (!caridStr) {
     location.href = '/booking.html';
+    return;
+  }
+
+  caridInput.value = caridStr;
+  onCheckoutFormChange();
+}
+
+const dateFormatter = Intl.DateTimeFormat('en-SG', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+});
+
+const currencyFormatter = Intl.NumberFormat('en-SG', {
+  style: 'currency',
+  currency: 'SGD',
+});
+
+function onCheckoutFormChange() {
+  const checkoutform = /** @type {HTMLFormElement | null} */ (
+    document.getElementById('checkoutform')
+  );
+
+  const dynamicCheckoutContentDiv = /** @type {HTMLDivElement | null} */ (
+    document.getElementById('dynamicCheckoutContent')
+  );
+  if (!checkoutform || !dynamicCheckoutContentDiv) {
+    return;
+  }
+
+  const rentFromEl = /** @type {HTMLInputElement} */ (
+    document.querySelector('input[name=rentFrom]')
+  );
+  const rentToEl = /** @type {HTMLInputElement} */ (
+    document.querySelector('input[name=rentTo]')
+  );
+  const now = new Date();
+  rentFromEl.min = now.toISOString().slice(0, 10);
+
+  dynamicCheckoutContentDiv.innerHTML = '';
+
+  const formData = new FormData(checkoutform);
+  const carIdStr = formData.get('carid');
+  const rentFromStr = formData.get('rentFrom');
+  const rentToStr = formData.get('rentTo');
+  const ccStr = formData.get('cc');
+
+  console.log({ carIdStr, rentFromStr, rentToStr, ccStr });
+
+  const carId = parseInt(carIdStr);
+  const car = carListing.find(({ id }) => id === carId);
+
+  if (!car) {
+    return;
+  }
+
+  const carNameEl = document.createElement('h2');
+  carNameEl.innerText = `${car.brand} ${car.model}`;
+
+  dynamicCheckoutContentDiv.appendChild(carNameEl);
+  const appendLabelAndValue = (
+    /** @type {string} */ labelText,
+    /** @type {string} */ value,
+  ) => {
+    const labelEl = document.createElement('p');
+    labelEl.innerText = labelText;
+    dynamicCheckoutContentDiv.appendChild(labelEl);
+
+    const valueEl = document.createElement('p');
+    valueEl.innerText = value;
+    dynamicCheckoutContentDiv.appendChild(valueEl);
+  };
+
+  let rentToDate;
+  let rentFromDate;
+  if (rentFromStr) {
+    rentFromDate = new Date(rentFromStr);
+    if (!isNaN(rentFromDate.getTime())) {
+      rentToEl.min = rentFromDate.toISOString().slice(0, 10);
+      appendLabelAndValue('From: ', dateFormatter.format(rentFromDate));
+    }
+  }
+
+  if (rentToStr) {
+    rentToDate = new Date(rentToStr);
+    if (!isNaN(rentToDate.getTime())) {
+      rentFromEl.max = rentToDate.toISOString().slice(0, 10);
+      appendLabelAndValue('To: ', dateFormatter.format(rentToDate));
+    }
+  }
+
+  if (rentToDate && rentFromDate) {
+    const msDiff = rentToDate.getTime() - rentFromDate.getTime();
+    const hoursDiff = msDiff / 3600_000;
+    const daysDiff = Math.ceil(hoursDiff / 24);
+
+    appendLabelAndValue('Duration: ', `${daysDiff} days`);
+
+    const subtotal = daysDiff * car.price;
+
+    appendLabelAndValue('Subtotal: ', currencyFormatter.format(subtotal));
+
+    const gst = subtotal * 0.09;
+    const grandTotal = subtotal + gst;
+    appendLabelAndValue('GST: ', currencyFormatter.format(gst));
+    appendLabelAndValue('Total: ', currencyFormatter.format(grandTotal));
   }
 }

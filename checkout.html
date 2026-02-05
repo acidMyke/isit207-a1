@@ -32,18 +32,21 @@
       <h1 class="publiconly">Please login first!!</h1>
       <h1 class="loginonly">Checkout</h1>
       <div class="loginonly">
-        <form onsubmit="processBooking(event)">
+        <form
+          id="checkoutform"
+          onsubmit="processCheckout(event)"
+          onchange="onCheckoutFormChange(event)"
+        >
           <img id="carImage" />
-          <input type="hidden" name="carid" />
+          <input type="hidden" name="carid" id="carid"/>
           <div class="formfield">
             <label for="from">From</label>
             <input id="from" name="rentFrom" type="datetime-local" required />
             <p>Please select a valid start date</p>
           </div>
-
           <div class="formfield">
             <label for="to">To</label>
-            <input id="to" name="rentTo" type="datetime-local" required />
+            <input id="to" name="rentTo" type="date" required />
             <p>Please select a valid end date</p>
           </div>
           <div class="formfield">
@@ -88,6 +91,11 @@
             <p>Invalid CVC</p>
           </div>
           <div class="formStatus"></div>
+
+          <h2>Summary: </h2>
+          <div class="formfield" id="dynamicCheckoutContent">
+          </div>
+
           <button class="btn-action-gradient" type="submit">Checkout</button>
         </form>
       </div>

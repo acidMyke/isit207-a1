@@ -16,6 +16,13 @@ main {
 form {
   display: flex;
   flex-flow: column;
+  align-items: center;
+  max-width: 480px;
+  margin: 0px auto;
+  
+  & > * {
+    width: 100%;
+  }
 
   img#carImage {
     order: 1;
@@ -23,7 +30,10 @@ form {
     @media (min-width: 760px) {
       order: 20;
     }
+  }
 
-    
+  #dynamicCheckoutContent {
+    min-height: 2rem;
+    background: var(--color-surface-alt);
   }
 }
