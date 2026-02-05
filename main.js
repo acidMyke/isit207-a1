@@ -78,6 +78,12 @@ let accounts = [];
 /** @type {Account | null} */
 let currentAccount = null;
 
+/**
+ *
+ * @param {string | string[]} status
+ * @param {'error' | 'success'} type
+ * @param {HTMLElement} el
+ */
 function setFormStatus(status, type = 'error', el) {
   /** @type {HTMLDivElement | null} */
   const formStatusEl = (el ?? document).querySelector('.formStatus');
@@ -104,7 +110,7 @@ function setFormStatus(status, type = 'error', el) {
   }
 }
 
-/** @param {Account} */
+/** @param {Account} account*/
 function setCurrentAccount(account) {
   currentAccount = account;
   saveToLocalStorage();
@@ -197,14 +203,15 @@ function initFromLocalStorage() {
   try {
     /** @type {ReturnType<typeof saveToLocalStorage>} */
     const dynamicData = JSON.parse(dynamicDataJson);
-    console.log('dynamicData', dynamicData);
     accounts = dynamicData.accounts;
     if (
       dynamicData.carQty &&
       Array.isArray(dynamicData.carQty) &&
       dynamicData.carQty.length
     ) {
-      carQty = dynamicData.carQty;
+      for (const key in dynamicData.carQty) {
+        carQty[key] = dynamicData.carQty[key];
+      }
     }
     if (
       dynamicData.currentAccount &&
@@ -272,28 +279,34 @@ class AppNavCompoenent extends HTMLElement {
     </header>`;
   }
 
+  static authPath = ['login.html', 'sign-up.html'];
+
   connectedCallback() {
     initFromLocalStorage();
     if (currentAccount) {
-      const menuEl = this.shadowRoot.getElementById('menu');
+      const menuEl = this.shadowRoot?.getElementById('menu');
       menuEl?.setAttribute('data-isLoggedIn', 'true');
       document.body.setAttribute('data-isLoggedIn', 'true');
     }
     const currentPath =
       window.location.pathname.split('/').pop() || 'index.html';
 
-    const links = this.shadowRoot.querySelectorAll('li > a');
+    const links = this.shadowRoot?.querySelectorAll('li > a');
 
-    links.forEach(link => {
+    links?.forEach(link => {
       const li = link.parentElement;
       const linkPath = link.getAttribute('href');
 
-      li.classList.toggle('active', linkPath === currentPath);
+      li?.classList.toggle('active', linkPath === currentPath);
 
-      if (['login.html', 'sign-up.html'].includes(linkPath)) {
+      if (linkPath && AppNavCompoenent.authPath.includes(linkPath)) {
+        let redirectTo = currentPath;
+        if (AppNavCompoenent.authPath.includes(currentPath)) {
+          redirectTo = getRedirectUrl();
+        }
         link.setAttribute(
           'href',
-          linkPath + '?redirect=' + encodeURIComponent(currentPath),
+          linkPath + '?redirect=' + encodeURIComponent(redirectTo),
         );
       }
     });
@@ -307,6 +320,7 @@ function renderCarGrid() {
   if (!carGrid) {
     return;
   }
+  carGrid.innerHTML = '';
   for (let car of carListing) {
     const carOptionEl = document.createElement('div');
     const { id, brand, imagePath, model, price } = car;
