@@ -32,6 +32,17 @@
  * @property {number} checkedOutAt
  */
 
+const dateFormatter = Intl.DateTimeFormat('en-SG', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+});
+
+const currencyFormatter = Intl.NumberFormat('en-SG', {
+  style: 'currency',
+  currency: 'SGD',
+});
+
 /** @type {Car[]} */
 let carListing = [
   {
@@ -245,6 +256,7 @@ function initFromLocalStorage() {
     }
   } catch {}
   renderCarGrid();
+  renderBookingHistory();
   initializeCarCheckout();
   setInterval(() => saveToLocalStorage(), 20_000);
 }
@@ -377,17 +389,6 @@ function initializeCarCheckout() {
   onCheckoutFormChange();
 }
 
-const dateFormatter = Intl.DateTimeFormat('en-SG', {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-});
-
-const currencyFormatter = Intl.NumberFormat('en-SG', {
-  style: 'currency',
-  currency: 'SGD',
-});
-
 const DAYS_MS = 86_400_000;
 
 function onCheckoutFormChange() {
@@ -412,7 +413,7 @@ function onCheckoutFormChange() {
     document.querySelector('input[name="preCalcTotal"]')
   );
   const now = new Date();
-  rentFromEl.min = now.toISOString().slice(0, 10);
+  rentFromEl.min = now.toISOString().slice(0, 16);
 
   dynamicCheckoutContentDiv.innerHTML = '';
 
@@ -464,7 +465,7 @@ function onCheckoutFormChange() {
     if (!isNaN(rentToDate.getTime())) {
       rentFromEl.max = new Date(rentToDate.getTime() - DAYS_MS)
         .toISOString()
-        .slice(0, 10);
+        .slice(0, 16);
       appendLabelAndValue('To: ', dateFormatter.format(rentToDate));
     }
   }
@@ -540,7 +541,10 @@ function renderBookingHistory() {
   );
 
   sortedBookings.forEach((booking, index) => {
-    historyListEl.appendChild(renderBookingAccordion(booking, index));
+    const el = renderBookingAccordion(booking, index);
+    if (el) {
+      historyListEl.appendChild(el);
+    }
   });
 }
 
@@ -550,6 +554,30 @@ function renderBookingHistory() {
  * @param {number} index
  */
 function renderBookingAccordion(booking, index) {
+  if (booking.userId !== currentAccount?.id) {
+    return null;
+  }
+
+  const car = carListing.find(({ id }) => id === booking.carId);
+
+  if (!car) {
+    return null;
+  }
+
   const accordion = document.createElement('div');
+  accordion.className = 'accordion';
+  accordion.setAttribute('data-status', booking.status);
+
+  const title = `${car.brand} ${car.model} - ${dateFormatter.format(new Date(booking.checkedOutAt))}`;
+
+  accordion.innerHTML = `
+  <input type="radio" name="accordion-control" ${index === 0 ? 'checked' : ''}/>
+  <div class="accordion-title">${title}</div>
+  <div class="accordion-content">
+    <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
+    <p>To: <strong>${dateFormatter.format(new Date(booking.dateTo))}</strong></p>
+    <p>Total: <strong>${currencyFormatter.format(booking.total)}</strong></p>
+    ${booking.penalty ? `<p>Penalty: ${currencyFormatter.format(booking.penalty)}</p>` : ''}
+  </div>`;
   return accordion;
 }

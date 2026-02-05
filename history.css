@@ -10,3 +10,18 @@ main {
     margin-bottom: 0.75rem;
   }
 }
+
+.accordion-title {
+  font-size: 1.6rem;
+  @media (min-width: 720px) {
+    font-size: 2rem;
+    
+  }
+}
+.accordion-content {
+  font-size: 1.2rem;
+  @media (min-width: 720px) {
+    font-size: 1.6rem;
+    
+  }
+}
