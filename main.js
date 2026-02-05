@@ -22,12 +22,14 @@
  * @typedef {Object} Booking
  * @property {number} carId
  * @property {string} userId
- * @property {string} datetimeform
- * @property {string} dateto
+ * @property {string} dateTimeFrom
+ * @property {string} dateTo
  * @property {string} last4cc
  * @property {number} total
  * @property {number?} penalty
  * @property {string[]} photos
+ * @property {'rented' | 'returned' | 'inspected'} status
+ * @property {number} checkedOutAt
  */
 
 /** @type {Car[]} */
@@ -295,7 +297,6 @@ class AppNavCompoenent extends HTMLElement {
           <li class="publiconly"><a href="sign-up.html">Sign Up</a></li>
           <li class="loginonly"><a href="booking.html">Booking</a></li>
           <li class="loginonly"><a href="history.html">History</a></li>
-          <li class="loginonly"><a href="return.html">Return</a></li>
           <li class="loginonly"><a href="#" onclick="processLogout(event)">Log out</a></li>
         </ul>
       </nav>
@@ -512,14 +513,43 @@ function processCheckout(event) {
   bookings.push({
     userId: currentAccount?.id,
     carId,
-    datetimeform: rentFromStr,
-    dateto: rentToStr,
+    dateTimeFrom: rentFromStr,
+    dateTo: rentToStr,
     last4cc: ccStr?.slice(12, 16),
     total: parseFloat(preCalcTotalStr),
+    status: 'rented',
+    checkedOutAt: new Date().getTime(),
+    penalty: 0,
+    photos: [],
   });
 
   carQty[carId.toString().padStart(2, '0')] -= 1;
   saveToLocalStorage();
 
   location.replace('/history.html');
+}
+
+function renderBookingHistory() {
+  const historyListEl = document.getElementById('history-list');
+  if (!historyListEl) {
+    return;
+  }
+
+  const sortedBookings = [...bookings].sort(b =>
+    b.status === 'rented' ? -1 : 1,
+  );
+
+  sortedBookings.forEach((booking, index) => {
+    historyListEl.appendChild(renderBookingAccordion(booking, index));
+  });
+}
+
+/**
+ *
+ * @param {Booking} booking
+ * @param {number} index
+ */
+function renderBookingAccordion(booking, index) {
+  const accordion = document.createElement('div');
+  return accordion;
 }
