@@ -1,3 +1,5 @@
+//@ts-check
+
 /**
  * @typedef {Object} Account
  * @property {string} name
@@ -8,28 +10,30 @@
 
 /**
  * @typedef {Object} Car
+ * @property {number} id
  * @property {string} brand
  * @property {string} model
- * @property {string} price
+ * @property {number} price
  * @property {string} imagePath
+ * @property {number} qty
  */
 
 /** @type {Car[]} */
-let cars = [
+let carListing = [
   {
     id: 0,
-    make: 'BMW',
+    brand: 'BMW',
     model: '3 Series',
     price: 333,
-    image: 'images/cars/00-3series.webp',
+    imagePath: 'images/cars/00-3series.webp',
     qty: 3,
   },
   {
     id: 0,
-    make: 'Audi',
+    brand: 'Audi',
     model: 'A4',
     price: 200,
-    image: 'images/cars/01-a4.webp',
+    imagePath: 'images/cars/01-a4.webp',
     qty: 4,
   },
 ];
@@ -157,31 +161,35 @@ function initFromLocalStorage() {
   const dynamicDataJson = localStorage.getItem('dynamicData');
   if (!dynamicDataJson) return;
   try {
+    /** @type {ReturnType<typeof saveToLocalStorage>} */
     const dynamicData = JSON.parse(dynamicDataJson);
     console.log('dynamicData', dynamicData);
     accounts = dynamicData.accounts;
     if (
-      dynamicData.cars &&
-      Array.isArray(dynamicData.cars) &&
-      dynamicData.cars.length
+      dynamicData.carListing &&
+      Array.isArray(dynamicData.carListing) &&
+      dynamicData.carListing.length
     ) {
-      cars = dynamicData.cars;
+      carListing = dynamicData.carListing;
     }
     if (
       dynamicData.currentAccount &&
+      dynamicData.currentAccount.loginMs &&
       dynamicData.currentAccount.loginMs + 600_000 > new Date().getTime()
     ) {
       currentAccount = dynamicData.currentAccount;
     }
   } catch {}
+  renderCarGrid();
 }
 
 function saveToLocalStorage() {
   if (currentAccount) {
     currentAccount.loginMs = new Date().getTime();
   }
-  const dynamicData = { accounts, currentAccount, cars };
+  const dynamicData = { accounts, currentAccount, carListing };
   localStorage.setItem('dynamicData', JSON.stringify(dynamicData));
+  return dynamicData;
 }
 
 class AppNavCompoenent extends HTMLElement {
@@ -260,14 +268,17 @@ class AppNavCompoenent extends HTMLElement {
 
 customElements.define('app-nav', AppNavCompoenent);
 
-/** @param {Event} event */
-function onBookingDetailChange(event) {
-  const { target } = event;
-  const targetName = target?.getAttribute('name');
-
-  if (!targetName || targetName === 'accordion-control') {
-    return;
+function renderCarGrid() {
+  const carGrid = document.getElementById('car-grid');
+  for (let car of carListing) {
+    const carOptionEl = document.createElement('div');
+    const { id, brand, imagePath, model, price, qty } = car;
+    carOptionEl.innerHTML = `
+      <img src="${imagePath}" alt="${brand} ${model}">
+      <h3>${brand} ${model}</h3>
+      <p>SGD ${price} per day</p>
+      <a class="btn-primary" href="/checkout?id=${id}">Select!</a>`;
+    carOptionEl.setAttribute('data-qty', qty.toString());
+    carGrid?.appendChild(carOptionEl);
   }
-
-  console.log(targetName);
 }

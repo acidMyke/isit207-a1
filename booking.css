@@ -8,15 +8,43 @@ main {
     font-size: 2.4rem;
 
     @media (min-width: 480px) {
-      font-size: 3.0rem;
+      font-size: 3rem;
     }
   }
 }
 
-#vehicleSelection {
+#car-grid {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
 
-}
+  & > div {
+    width: 14rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border-alt);
+    border-radius: 1rem;
 
-#dateSelection {
-  
+    & > img {
+      max-width: 100%;
+    }
+
+    & > h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    & > a {
+      appearance: button;
+      text-decoration: none;
+      vertical-align: middle;
+      margin: 0.5rem auto 0px auto;
+      width: 100%;
+      text-align: center;
+      font-size: 1.4rem;
+
+      @media (min-width: 480px) {
+        font-size: 1.8rem;
+      }
+    }
+  }
 }
