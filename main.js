@@ -20,6 +20,7 @@
 
 /**
  * @typedef {Object} Booking
+ * @property {number} id
  * @property {number} carId
  * @property {string} userId
  * @property {string} dateTimeFrom
@@ -28,7 +29,7 @@
  * @property {number} total
  * @property {number?} penalty
  * @property {string[]} photos
- * @property {'rented' | 'returned' | 'inspected'} status
+ * @property {'reserved' | 'collected' | 'returned' | 'inspected'} status
  * @property {number} checkedOutAt
  */
 
@@ -536,9 +537,23 @@ function renderBookingHistory() {
     return;
   }
 
-  const sortedBookings = [...bookings].sort(b =>
-    b.status === 'rented' ? -1 : 1,
-  );
+  const statusOrder = {
+    reserved: 0,
+    collected: 0,
+    returned: 1,
+    inspected: 2,
+  };
+
+  const sortedBookings = bookings.toSorted((a, b) => {
+    const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+    if (statusDiff !== 0) {
+      return statusDiff;
+    }
+
+    return (
+      new Date(a.dateTimeFrom).getTime() - new Date(b.dateTimeFrom).getTime()
+    );
+  });
 
   sortedBookings.forEach((booking, index) => {
     const el = renderBookingAccordion(booking, index);
@@ -571,7 +586,7 @@ function renderBookingAccordion(booking, index) {
   const title = `${car.brand} ${car.model} - ${dateFormatter.format(new Date(booking.checkedOutAt))}`;
 
   accordion.innerHTML = `
-  <input type="radio" name="accordion-control" ${index === 0 ? 'checked' : ''}/>
+  <input type="checkbox" name="accordion-control-${booking.id}" ${booking.status === 'reserved' || booking.status === 'collected' ? 'checked' : ''}/>
   <div class="accordion-title">${title}</div>
   <div class="accordion-content">
     <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
@@ -579,5 +594,35 @@ function renderBookingAccordion(booking, index) {
     <p>Total: <strong>${currencyFormatter.format(booking.total)}</strong></p>
     ${booking.penalty ? `<p>Penalty: ${currencyFormatter.format(booking.penalty)}</p>` : ''}
   </div>`;
+
+  let contentEl = accordion.querySelector('.accordion-content');
+  let buttonEl = document.createElement('button');
+  buttonEl.classList.add('btn-primary');
+
+  if (booking.status === 'reserved') {
+    buttonEl.onclick = () => updateBookingStatus(booking.id, 'collected');
+    buttonEl.textContent = 'Collect';
+    contentEl?.appendChild(buttonEl);
+  }
+
+  if (booking.status === 'collected') {
+    buttonEl.onclick = () => updateBookingStatus(booking.id, 'returned');
+    buttonEl.textContent = 'Return';
+    contentEl?.appendChild(buttonEl);
+  }
+
   return accordion;
+}
+
+/**
+ * @param {number} id
+ * @param {Booking['status']} status
+ */
+function updateBookingStatus(id, status) {
+  let booking = bookings.find(b => b.id == id);
+  if (booking) {
+    booking.status = status;
+  }
+  saveToLocalStorage();
+  location.reload();
 }

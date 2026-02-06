@@ -333,29 +333,33 @@ body:not([data-isLoggedIn='true']) {
   grid-template-rows: max-content 0fr;
   grid-template-columns: minmax(0, 1fr);
   border: 1px solid var(--color-border-alt);
+  --accordion-radius: 1.4rem;
+  border-top-left-radius: var(--accordion-radius);
+  border-top-right-radius: var(--accordion-radius);
+  border-bottom-left-radius: var(--accordion-radius);
+  border-bottom-right-radius: var(--accordion-radius);
 
   & > * {
     width: 100%;
   }
 
   & > .accordion-title,
-  & > input[type='radio'] {
+  & > input:is([type='radio'], [type='checkbox']) {
     grid-row-start: 1;
     grid-column-start: 1;
     padding: 1rem;
     min-height: 1lh;
     padding-inline-end: 3rem;
+    background-color: var(--color-surface);
+    border-top-left-radius: var(--accordion-radius);
+    border-top-right-radius: var(--accordion-radius);
+    cursor: pointer;
   }
 
-  & > input[type='radio'] {
+  & > input:is([type='radio'], [type='checkbox']) {
     appearance: none;
     opacity: 0;
     z-index: 1;
-    cursor: pointer;
-  }
-
-  & > .accordion-title {
-    cursor: pointer;
   }
 
   & > .accordion-content {
@@ -365,14 +369,12 @@ body:not([data-isLoggedIn='true']) {
     min-height: 0;
     padding: 0px 1rem;
     cursor: unset;
+    border-bottom-left-radius: var(--accordion-radius);
+    border-bottom-right-radius: var(--accordion-radius);
   }
 
-  &:has(> input[type='radio']:checked) {
+  &:has(> input:is([type='radio'], [type='checkbox']):checked) {
     grid-template-rows: max-content 1fr;
-
-    & > input[type='radio'] {
-      cursor: unset;
-    }
 
     & > .accordion-content {
       content-visibility: visible;
