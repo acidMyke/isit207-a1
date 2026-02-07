@@ -1,4 +1,26 @@
 
+.nav {
+  font-size: 2rem;
+}
+
+
 section.spaview:not(.spaactive) {
   display: none !important;
+}
+
+#loginView {
+  margin: 12rem auto;
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px hsla(221, 83%, 20%, 0.08);
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
 }

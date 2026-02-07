@@ -16,3 +16,30 @@ function toggleSpaView(viewElId) {
   activeViewEl.classList.remove(SPA_ACTIVE_CLASSNAME);
   nextViewEl.classList.add(SPA_ACTIVE_CLASSNAME);
 }
+
+const adminCredentials = [{ username: 'notadmin', password: 'notpassword' }];
+
+/**
+ *
+ * @param {SubmitEvent} event
+ */
+function processAdminLogin(event) {
+  if (!event || !event.target) return;
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const username = data.get('username').trim();
+  const password = data.get('password');
+
+  if (username.length === 0) {
+    setFormStatus('Username cannot be empty');
+    return;
+  }
+
+  for (let creds of adminCredentials) {
+    if ((creds.username = username && creds.password == password)) {
+      toggleSpaView('bookingListView');
+    }
+  }
+
+  setFormStatus('Invalid credentials');
+}

@@ -46,6 +46,10 @@ body {
   display: block;
 }
 
+.hidden {
+  display: none;
+}
+
 .site-header {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);

@@ -31,8 +31,8 @@
   <body>
     <header class="site-header">
       <nav class="nav">
-        <strong>Admin</strong>
-        <button class="btn-link loginonly" onclick="logout()">Logout</button>
+        <strong>AZoom Admin</strong>
+        <button id="logoutbtn" class="btn-link hidden" onclick="logout()">Logout</button>
       </nav>
     </header>
 
@@ -44,11 +44,11 @@
           onsubmit="processAdminLogin(event)"
         >
           <div class="formfield">
-            <label for="namail">Name/Email</label>
+            <label for="username">Username</label>
             <input
-              id="namail"
-              name="namail"
-              placeholder="you/you@example.com"
+              id="username"
+              name="username"
+              placeholder="you"
               required
             />
             <p>Required</p>
@@ -71,6 +71,9 @@
 
           <button class="btn-action-gradient" type="submit">Sign in</button>
         </form>
+      </section>
+      <section id="bookingListView" class="spaview">
+
       </section>
     </main>
   </body>
