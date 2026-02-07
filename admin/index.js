@@ -158,7 +158,9 @@ function renderBookingCard(booking) {
     <p>Status: <strong>${booking.status}</strong></p>
     <p>Customer: <strong>${user.name}</strong></p>
     <p>Car: <strong>${car.brand} ${car.model}</strong></p>
-    <p>Checkout at: <strong>${dateTimeFormatter.format(booking.checkedOutAt)}</strong></p>
+    <p>Checkout at:</p>
+    <p class="indent"><strong>${dateFormatter.format(new Date(booking.checkedOutAt))}</strong></p>
+    <p class="indent"><strong>${timeFormatter.format(new Date(booking.checkedOutAt))}</strong></p>
     <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
     <p>To: <strong>${dateFormatter.format(new Date(booking.dateTo))}</strong></p>
     <p>Total: <strong>${currencyFormatter.format(booking.total)}</strong></p>

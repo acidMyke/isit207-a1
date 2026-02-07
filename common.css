@@ -73,6 +73,10 @@ body {
   display: none;
 }
 
+.indent {
+  text-indent: 1rem;
+}
+
 .hamburger {
   cursor: pointer;
 }

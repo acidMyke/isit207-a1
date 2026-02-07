@@ -39,15 +39,10 @@ const dateFormatter = Intl.DateTimeFormat('en-SG', {
   day: '2-digit',
 });
 
-const dateTimeFormatter = Intl.DateTimeFormat('en-SG', {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
+const timeFormatter = Intl.DateTimeFormat('en-SG', {
+  hour12: true,
   hour: 'numeric',
-  hour12: false,
   minute: '2-digit',
-  weekday: 'short',
-  dayPeriod: 'long',
 });
 
 const currencyFormatter = Intl.NumberFormat('en-SG', {
@@ -556,7 +551,7 @@ function processCheckout(event) {
     dateTo: rentToStr,
     last4cc: ccStr?.slice(12, 16),
     total: parseFloat(preCalcTotalStr),
-    status: 'rented',
+    status: 'reserved',
     checkedOutAt: new Date().getTime(),
     penalty: 0,
     photos: [],
