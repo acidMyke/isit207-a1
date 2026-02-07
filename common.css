@@ -400,3 +400,15 @@ body:not([data-isLoggedIn='true']) {
     }
   }
 }
+
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+}

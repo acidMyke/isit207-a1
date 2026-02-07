@@ -24,7 +24,7 @@ section.spaview:not(.spaactive) {
 }
 
 #bookingListView {
-  form {
+  form#bookingFilter {
     display: flex;
     flex-flow: row nowrap;
     gap: 1rem;
@@ -52,39 +52,61 @@ section.spaview:not(.spaactive) {
     min-width: 12rem;
     width: 100%;
     box-shadow: 0 10px 30px hsla(221, 83%, 20%, 0.08);
+  }
+}
 
-    .card-title {
-      font-size: 1.6rem;
-      font-weight: 600;
-      @media (min-width: 720px) {
-        font-size: 2rem;
-      }
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  @media (min-width: 720px) {
+    font-size: 2rem;
+  }
 
-      border-top-left-radius: var(--border-radius);
-      border-top-right-radius: var(--border-radius);
-      border-bottom: 1px solid var(--color-border);
-      margin-bottom: 0.25rem;
-    }
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.25rem;
+}
 
-    .card-content {
-      margin-top: 0.5rem;
-      display: grid;
-      font-size: 1.4rem;
-      width: fit-content;
+.card-content {
+  margin-top: 0.5rem;
+  display: grid;
+  font-size: 1.4rem;
+  width: fit-content;
+  grid-auto-rows: 1fr;
+  grid-template-columns: 1fr;
+  min-height: 20rem;
+  grid-template-rows: repeat(11, 1fr);
+  column-gap: 2rem;
 
-      & > p {
-        white-space: nowrap;
-        & > strong {
-          text-transform: capitalize;
-        }
-      }
+  dialog & {
+    grid-auto-flow: column;
+    grid-template-rows: repeat(9, 1fr);
+  }
 
-      & > button {
-        grid-row-end: span 2;
-      }
-
-      border-bottom-left-radius: var(--border-radius);
-      border-bottom-right-radius: var(--border-radius);
+  & > p {
+    white-space: nowrap;
+    &:is(:first-child, :nth-child(2)) > strong {
+      text-transform: capitalize;
     }
   }
+
+  & > button {
+    grid-row-end: span 2;
+    font-size: 1.5rem;
+  }
+
+  & > form {
+    grid-row-start: 1;
+    grid-row-end: -1;
+
+    display: grid;
+    gap: 1rem;
+    grid-auto-rows: min-content;
+
+
+  }
+
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
 }

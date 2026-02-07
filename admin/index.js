@@ -125,8 +125,17 @@ function renderBookingList(event) {
     if (statusStr !== '' && statusStr !== booking.status) {
       continue;
     }
+    /** @type {HTMLElement[]} */
+    const addonElements = [];
+    if (booking.status !== 'inspected') {
+      const inspectButton = document.createElement('button');
+      inspectButton.classList.add('btn-primary');
+      inspectButton.onclick = () => showUpdateBookingModel(booking, true);
+      inspectButton.textContent = 'Update';
+      addonElements.push(inspectButton);
+    }
 
-    const bookingCard = renderBookingCard(booking);
+    const bookingCard = renderBookingCard(booking, addonElements);
     if (bookingCard) {
       shownCount++;
       bookingListResultEl.appendChild(bookingCard);
@@ -137,8 +146,9 @@ function renderBookingList(event) {
 /**
  *
  * @param {Booking} booking
+ * @param {HTMLElement[]} addonElements
  */
-function renderBookingCard(booking) {
+function renderBookingCard(booking, addonElements) {
   const car = carListing.find(({ id }) => id === booking.carId);
   const user = accounts.find(({ id }) => id === booking.userId);
 
@@ -167,9 +177,87 @@ function renderBookingCard(booking) {
     ${booking.penalty ? `<p>Penalty: ${currencyFormatter.format(booking.penalty)}</p>` : ''}
   </div>`;
 
-  let contentEl = card.querySelector('.accordion-content');
-  let primaryButtonEl = document.createElement('button');
-  primaryButtonEl.classList.add('btn-primary');
+  let contentEl = card.querySelector('.card-content');
+
+  if (addonElements && addonElements.length > 0) {
+    for (const el of addonElements) {
+      contentEl?.appendChild(el);
+    }
+  }
 
   return card;
+}
+
+/**
+ * @param {Booking} booking
+ * @param {boolean} triggerShowModal
+ */
+function showUpdateBookingModel(booking, triggerShowModal) {
+  const dialogEl = /** @type {HTMLDialogElement} */ (
+    document.getElementById('updateBookingDialog')
+  );
+
+  if (!dialogEl) {
+    return;
+  }
+
+  /** @type {HTMLElement[]} */
+  const formElements = [updateStatusFormField(booking)];
+
+  if (booking.status === 'inspected') {
+    const saveWarningDiv = document.createElement('div');
+    saveWarningDiv.classList.add('formStatus');
+    saveWarningDiv.innerHTML = `
+      <p class="warning">Saving as "Inspected" makes this booking read-only.</p>
+    `;
+    formElements.splice(1, 0, saveWarningDiv);
+  }
+
+  let updateFormEl = document.createElement('form');
+  formElements.forEach(el => updateFormEl.appendChild(el));
+
+  const cardEl = renderBookingCard(booking, [updateFormEl]);
+
+  if (!cardEl) {
+    return;
+  }
+
+  dialogEl.innerHTML = '';
+  dialogEl.appendChild(cardEl);
+  if (triggerShowModal) {
+    dialogEl.showModal();
+  }
+}
+
+/**
+ * @param {Booking} booking
+ */
+function updateStatusFormField(booking) {
+  const labelEl = document.createElement('label');
+  labelEl.setAttribute('for', 'updateStatus');
+  labelEl.textContent = 'Status';
+
+  const selectEl = document.createElement('select');
+  selectEl.id = 'updateStatus';
+  selectEl.name = 'status';
+  selectEl.innerHTML = `
+  <option value="reserved">Reserved</option>
+  <option value="collected">Collected</option>
+  <option value="returned">Returned</option>
+  <option value="inspected">Inspected</option>
+  <option value="cancelled">Cancelled</option>
+  `;
+  selectEl.value = booking.status;
+  selectEl.onchange = () =>
+    showUpdateBookingModel({ ...booking, status: selectEl.value }, false);
+
+  const selectedOption = selectEl.querySelector(
+    `option[value="${booking.status}"]`,
+  );
+  const statusSelectField = document.createElement('div');
+  statusSelectField.classList.add('formfield');
+  statusSelectField.appendChild(labelEl);
+  statusSelectField.appendChild(selectEl);
+
+  return statusSelectField;
 }
