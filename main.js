@@ -27,7 +27,7 @@
  * @property {string} dateTo
  * @property {string} last4cc
  * @property {number} total
- * @property {'reserved' | 'collected' | 'returned' | 'inspected'} status
+ * @property {'reserved' | 'collected' | 'returned' | 'inspected' | 'cancelled'} status
  * @property {number} checkedOutAt
  * @property {string?} comment
  * @property {number?} penalty
@@ -130,6 +130,10 @@ const BOOKING_STATUS_CONST = {
   },
   inspected: {
     displayStr: 'Inspected',
+    order: 2,
+  },
+  cancelled: {
+    displayStr: 'Cancelled',
     order: 2,
   },
 };
@@ -621,8 +625,9 @@ function renderBookingAccordion(booking, index) {
     <p>${BOOKING_STATUS_CONST[booking.status].displayStr}</p>
     <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
     <p>To: <strong>${dateFormatter.format(new Date(booking.dateTo))}</strong></p>
-    <p>Total: <strong>${currencyFormatter.format(booking.total)}</strong></p>
-    ${booking.penalty ? `<p>Penalty: ${currencyFormatter.format(booking.penalty)}</p>` : ''}
+    <p>Subtotal: <strong>${currencyFormatter.format(booking.total)}</strong></p>
+    ${booking.penalty ? `<p>Penalty: <strong>${currencyFormatter.format(booking.penalty)}</strong></p>` : ''}
+    ${booking.comment ? `<p>Employee comment: <strong>${booking.comment}</strong></p>` : ''}
   </div>`;
 
   let contentEl = accordion.querySelector('.accordion-content');
