@@ -547,7 +547,7 @@ function processCheckout(event) {
     return;
   }
 
-  bookings.push({
+  bookings.unshift({
     id: bookings.length,
     userId: currentAccount?.id,
     carId,
@@ -622,28 +622,36 @@ function renderBookingAccordion(booking, index) {
     <span>${BOOKING_STATUS_CONST[booking.status].displayStr}</span>
   </div>
   <div class="accordion-content">
-    <p>${BOOKING_STATUS_CONST[booking.status].displayStr}</p>
+    <p>Status: <strong>${BOOKING_STATUS_CONST[booking.status].displayStr}</strong></p>
     <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
     <p>To: <strong>${dateFormatter.format(new Date(booking.dateTo))}</strong></p>
     <p>Subtotal: <strong>${currencyFormatter.format(booking.total)}</strong></p>
-    ${booking.penalty ? `<p>Penalty: <strong>${currencyFormatter.format(booking.penalty)}</strong></p>` : ''}
-    ${booking.comment ? `<p>Employee comment: <strong>${booking.comment}</strong></p>` : ''}
+    ${booking.penalty ? `<p>Penalty: <strong>${currencyFormatter.format(booking.penalty)} [Reason: ${booking.comment ?? ''}]</strong></p>` : ''}
+    ${booking.penalty ? `<p>Total: <strong>${currencyFormatter.format(booking.total + booking.penalty)}</strong></p>` : ''}
+    ${!booking.penalty && booking.comment ? `<p>Employee comment: <strong>${booking.comment}</strong></p>` : ''}
   </div>`;
 
   let contentEl = accordion.querySelector('.accordion-content');
-  let buttonEl = document.createElement('button');
-  buttonEl.classList.add('btn-primary');
+  let primaryButtonEl = document.createElement('button');
+  primaryButtonEl.classList.add('btn-primary');
+  let linkButtonEl = document.createElement('button');
+  linkButtonEl.classList.add('btn-link');
 
   if (booking.status === 'reserved') {
-    buttonEl.onclick = () => updateBookingStatus(booking.id, 'collected');
-    buttonEl.textContent = 'Collect';
-    contentEl?.appendChild(buttonEl);
+    primaryButtonEl.onclick = () =>
+      updateBookingStatus(booking.id, 'collected');
+    primaryButtonEl.textContent = 'Collect';
+    contentEl?.appendChild(primaryButtonEl);
+
+    linkButtonEl.onclick = () => updateBookingStatus(booking.id, 'cancelled');
+    linkButtonEl.textContent = 'Cancel';
+    contentEl?.appendChild(linkButtonEl);
   }
 
   if (booking.status === 'collected') {
-    buttonEl.onclick = () => updateBookingStatus(booking.id, 'returned');
-    buttonEl.textContent = 'Return';
-    contentEl?.appendChild(buttonEl);
+    primaryButtonEl.onclick = () => updateBookingStatus(booking.id, 'returned');
+    primaryButtonEl.textContent = 'Return';
+    contentEl?.appendChild(primaryButtonEl);
   }
 
   return accordion;

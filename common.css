@@ -210,10 +210,12 @@ body:not([data-isLoggedIn='true']) {
 }
 
 .btn-link {
+  appearance: none;
   margin-top: 0.5rem;
   color: var(--color-primary);
   font-weight: 600;
   cursor: pointer;
+  background-color: transparent;
 
   &:visited,
   &.visited {
