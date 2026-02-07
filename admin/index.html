@@ -71,26 +71,26 @@
       </section>
       <section id="bookingListView" class="spaview spaactive">
         <form
-          onchange="onBookingListFilterChange(event)"
+          onchange="renderBookingList(event)"
           id="bookingFilter"
         >
           <div class="formfield">
             <label for="bookingFilterCust">Customer</label>
-            <select id="bookingFilterCust" name="userId">
+            <select id="bookingFilterCust" name="userId" onchange="renderBookingList(event)">
               <option value="-1">None</option>
               <!-- TODO: JS -->
             </select>
           </div>
           <div class="formfield">
             <label for="bookingFilterCar">Car</label>
-            <select id="bookingFilterCar" name="carId">
+            <select id="bookingFilterCar" name="carId" onchange="renderBookingList(event)">
               <option value="-1">None</option>
               <!-- TODO: JS -->
             </select>
           </div>
           <div class="formfield">
             <label for="bookingFilterStatus">Status</label>
-            <select id="bookingFilterStatus" name="status" >
+            <select id="bookingFilterStatus" name="status" onchange="renderBookingList(event)">
               <option value="">None</option>
               <option value="reserved">Reserved</option>
               <option value="collected">Collected</option>
@@ -100,6 +100,9 @@
             </select>
           </div>
         </form>
+        <div id="bookingListResult">
+
+        </div>
       </section>
     </main>
   </body>

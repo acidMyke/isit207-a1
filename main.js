@@ -39,6 +39,17 @@ const dateFormatter = Intl.DateTimeFormat('en-SG', {
   day: '2-digit',
 });
 
+const dateTimeFormatter = Intl.DateTimeFormat('en-SG', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+  hour: 'numeric',
+  hour12: false,
+  minute: '2-digit',
+  weekday: 'short',
+  dayPeriod: 'long',
+});
+
 const currencyFormatter = Intl.NumberFormat('en-SG', {
   style: 'currency',
   currency: 'SGD',
@@ -538,6 +549,7 @@ function processCheckout(event) {
   }
 
   bookings.push({
+    id: bookings.length,
     userId: currentAccount?.id,
     carId,
     dateTimeFrom: rentFromStr,
