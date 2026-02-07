@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AZoom - Admin Bookings</title>
     <link rel="stylesheet" href="/common.css" />
-    <link rel="stylesheet" href="/admin/index.css" />
+    <link rel="stylesheet" href="/admin.css" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -26,7 +26,7 @@
     />
     <link rel="manifest" href="/site.webmanifest" />
     <script defer src="/main.js"></script>
-    <script defer src="/admin/index.js"></script>
+    <script defer src="/admin.js"></script>
   </head>
   <body>
     <header class="site-header">
@@ -39,7 +39,7 @@
     </header>
 
     <main style="max-width: 1200px; margin: auto; padding: 1rem">
-      <section id="loginView" class="spaview">
+      <section id="loginView" class="spaview spaactive">
         <h1>Admin login</h1>
         <form
           style="display: grid; gap: 1.25rem"
@@ -69,7 +69,7 @@
           <button class="btn-action-gradient" type="submit">Sign in</button>
         </form>
       </section>
-      <section id="bookingListView" class="spaview spaactive">
+      <section id="bookingListView" class="spaview">
         <form
           onchange="renderBookingList(event)"
           id="bookingFilter"

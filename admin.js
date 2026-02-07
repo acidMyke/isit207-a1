@@ -131,6 +131,13 @@ function renderBookingList(event) {
       addonElements.push(
         createButton('Update', () => showUpdateBookingModel(booking, true)),
       );
+    } else if (booking.comment) {
+      const strongEl = document.createElement('strong');
+      strongEl.textContent = booking.comment;
+      const commentEl = document.createElement('p');
+      commentEl.textContent = 'Comment: ';
+      commentEl.appendChild(strongEl);
+      addonElements.push(commentEl);
     }
 
     const bookingCard = renderBookingCard(booking, addonElements);
