@@ -108,6 +108,26 @@ let currentAccount = null;
 /** @type {Booking[]} */
 let bookings = [];
 
+/** @type {Record<Booking['status'], {displayStr: string, order: number}>} */
+const BOOKING_STATUS_CONST = {
+  reserved: {
+    displayStr: 'Reserved, Pending collection',
+    order: 0,
+  },
+  collected: {
+    displayStr: 'Collected, Pending returned',
+    order: 0,
+  },
+  returned: {
+    displayStr: 'Returned, Pending inspection',
+    order: 1,
+  },
+  inspected: {
+    displayStr: 'Inspected',
+    order: 2,
+  },
+};
+
 /**
  *
  * @param {string | string[]} status
@@ -537,15 +557,10 @@ function renderBookingHistory() {
     return;
   }
 
-  const statusOrder = {
-    reserved: 0,
-    collected: 0,
-    returned: 1,
-    inspected: 2,
-  };
-
   const sortedBookings = bookings.toSorted((a, b) => {
-    const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+    const statusDiff =
+      BOOKING_STATUS_CONST[a.status].order -
+      BOOKING_STATUS_CONST[b.status].order;
     if (statusDiff !== 0) {
       return statusDiff;
     }
@@ -583,12 +598,15 @@ function renderBookingAccordion(booking, index) {
   accordion.className = 'accordion';
   accordion.setAttribute('data-status', booking.status);
 
-  const title = `${car.brand} ${car.model} - ${dateFormatter.format(new Date(booking.checkedOutAt))}`;
-
   accordion.innerHTML = `
   <input type="checkbox" name="accordion-control-${booking.id}" ${booking.status === 'reserved' || booking.status === 'collected' ? 'checked' : ''}/>
-  <div class="accordion-title">${title}</div>
+  <div class="accordion-title">
+    <span>${car.brand} ${car.model}</span>
+    <span>${dateFormatter.format(new Date(booking.checkedOutAt))}</span>
+    <span>${BOOKING_STATUS_CONST[booking.status].displayStr}</span>
+  </div>
   <div class="accordion-content">
+    <p>${BOOKING_STATUS_CONST[booking.status].displayStr}</p>
     <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
     <p>To: <strong>${dateFormatter.format(new Date(booking.dateTo))}</strong></p>
     <p>Total: <strong>${currencyFormatter.format(booking.total)}</strong></p>
