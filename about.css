@@ -1,0 +1,25 @@
+
+main {
+  margin: 0px auto;
+  max-width: 480px;
+  
+  @media (min-width: 720px) {
+    max-width: 720px;
+  }
+}
+
+section {
+  margin-top: 1.25rem;
+
+  &:first-child {
+    text-align: center;
+    margin: 2rem;
+    
+    h1 {
+      color: var(--color-secondary);
+      font-size: 2rem;
+    }
+  }
+}
+
+
