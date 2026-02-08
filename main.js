@@ -27,7 +27,7 @@
  * @property {string} dateTo
  * @property {string} last4cc
  * @property {number} total
- * @property {'reserved' | 'collected' | 'returned' | 'inspected' | 'cancelled'} status
+ * @property {'reserved' | 'collected' | 'returned' | 'inspected' | 'cancelled' | 'refunded' } status
  * @property {number} checkedOutAt
  * @property {string?} comment
  * @property {number?} penalty
@@ -114,27 +114,37 @@ let currentAccount = null;
 /** @type {Booking[]} */
 let bookings = [];
 
-/** @type {Record<Booking['status'], {displayStr: string, order: number}>} */
+/** @type {Record<Booking['status'], {desription: string, order: number, label: string }>} */
 const BOOKING_STATUS_CONST = {
   reserved: {
-    displayStr: 'Reserved, Pending collection',
+    desription: 'Reserved, Pending collection',
     order: 0,
+    label: 'Reserved',
   },
   collected: {
-    displayStr: 'Collected, Pending returned',
+    desription: 'Collected, Pending returned',
     order: 0,
+    label: 'Collected',
   },
   returned: {
-    displayStr: 'Returned, Pending inspection',
+    desription: 'Returned, Pending inspection',
     order: 1,
+    label: 'Returned',
   },
   inspected: {
-    displayStr: 'Inspected',
+    desription: 'Inspected',
     order: 2,
+    label: 'Inspected',
   },
   cancelled: {
-    displayStr: 'Cancelled',
+    desription: 'Cancelled, Pending refund',
     order: 2,
+    label: 'Cancelled',
+  },
+  refunded: {
+    desription: 'Refunded',
+    order: 2,
+    label: 'Refunded',
   },
 };
 
@@ -619,10 +629,10 @@ function renderBookingAccordion(booking, index) {
   <div class="accordion-title">
     <span>${car.brand} ${car.model}</span>
     <span>${dateFormatter.format(new Date(booking.checkedOutAt))}</span>
-    <span>${BOOKING_STATUS_CONST[booking.status].displayStr}</span>
+    <span>${BOOKING_STATUS_CONST[booking.status].desription}</span>
   </div>
   <div class="accordion-content">
-    <p>Status: <strong>${BOOKING_STATUS_CONST[booking.status].displayStr}</strong></p>
+    <p>Status: <strong>${BOOKING_STATUS_CONST[booking.status].desription}</strong></p>
     <p>From: <strong>${dateFormatter.format(new Date(booking.dateTimeFrom))}</strong></p>
     <p>To: <strong>${dateFormatter.format(new Date(booking.dateTo))}</strong></p>
     <p>Subtotal: <strong>${currencyFormatter.format(booking.total)}</strong></p>

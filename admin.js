@@ -59,6 +59,16 @@ function initCars() {
   }
 }
 
+function initStatusOption() {
+  const statusSelectEl = document.getElementById('bookingFilterStatus');
+
+  if (!statusSelectEl) {
+    return;
+  }
+
+  statusSelectEl.append(...generateStatusOptionEls(true));
+}
+
 /**
  *
  * @param {Account[]} accounts
@@ -82,6 +92,7 @@ initFromLocalStorage(function main(data) {
   const { accounts } = data;
 
   initCars();
+  initStatusOption();
   initAccounts(accounts);
   renderBookingList();
 });
@@ -127,7 +138,7 @@ function renderBookingList(event) {
     }
     /** @type {HTMLElement[]} */
     const addonElements = [];
-    if (booking.status !== 'inspected') {
+    if (booking.status !== 'inspected' && booking.status !== 'refunded') {
       addonElements.push(
         createButton('Update', () => showUpdateBookingModel(booking, true)),
       );
@@ -231,6 +242,15 @@ function showUpdateBookingModel(booking, triggerShowModal) {
     formElements.splice(1, 0, saveWarningDiv);
   }
 
+  if (booking.status === 'refunded') {
+    const saveWarningDiv = document.createElement('div');
+    saveWarningDiv.classList.add('formStatus');
+    saveWarningDiv.innerHTML = `
+      <p class="warning">Saving as "Refunded" will finalized this booking and refund the customer</p>
+    `;
+    formElements.splice(1, 0, saveWarningDiv);
+  }
+
   let updateFormEl = document.createElement('form');
   updateFormEl.onsubmit = event => event.preventDefault();
   formElements.forEach(el => updateFormEl.appendChild(el));
@@ -248,6 +268,26 @@ function showUpdateBookingModel(booking, triggerShowModal) {
   }
 }
 
+function generateStatusOptionEls(withNone = false) {
+  const optionEls = Object.entries(BOOKING_STATUS_CONST).map(
+    ([value, { label }]) => {
+      const optionEl = document.createElement('option');
+      optionEl.value = value;
+      optionEl.textContent = label;
+      return optionEl;
+    },
+  );
+
+  if (withNone) {
+    const optionEl = document.createElement('option');
+    optionEl.value = '';
+    optionEl.textContent = 'None';
+    return [optionEl, ...optionEls];
+  }
+
+  return optionEls;
+}
+
 /**
  * @param {ExtendedBookingForAdminUpdate} booking
  */
@@ -259,13 +299,8 @@ function updateStatusFormField(booking) {
   const selectEl = document.createElement('select');
   selectEl.id = 'updateStatus';
   selectEl.name = 'status';
-  selectEl.innerHTML = `
-  <option value="reserved">Reserved</option>
-  <option value="collected">Collected</option>
-  <option value="returned">Returned</option>
-  <option value="inspected">Inspected</option>
-  <option value="cancelled">Cancelled</option>
-  `;
+  selectEl.append(...generateStatusOptionEls());
+
   selectEl.value = booking.status;
   selectEl.onchange = () =>
     showUpdateBookingModel({ ...booking, status: selectEl.value }, false);
