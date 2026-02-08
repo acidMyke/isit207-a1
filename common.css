@@ -71,6 +71,10 @@ body {
 
 #nav-toggle {
   display: none;
+  
+  &:checked ~ #menu {
+    display: flex;
+  }
 }
 
 .indent {
@@ -137,10 +141,6 @@ body {
         filter: grayscale(0.25);
       }
     }
-  }
-
-  #nav-toggle:checked ~ & {
-    display: flex;
   }
 }
 
