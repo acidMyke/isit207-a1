@@ -351,6 +351,10 @@ class AppNavCompoenent extends HTMLElement {
 
 customElements.define('app-nav', AppNavCompoenent);
 
+function redirectAfterLogin() {
+  location.href = getRedirectUrl();
+}
+
 /**
  *
  * @param {MouseEvent} event

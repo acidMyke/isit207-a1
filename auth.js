@@ -1,9 +1,5 @@
 //@ts-check
 
-function redirectAfterLogin() {
-  location.href = getRedirectUrl();
-}
-
 /** @param {Account} account*/
 function setCurrentAccount(account) {
   currentAccount = account;
