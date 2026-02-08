@@ -77,6 +77,7 @@ function onCheckoutFormChange() {
 
   const carNameEl = document.createElement('h2');
   carNameEl.innerText = `${car.brand} ${car.model}`;
+  let hasDetail = false;
 
   dynamicCheckoutContentDiv.appendChild(carNameEl);
   const appendLabelAndValue = (
@@ -101,6 +102,7 @@ function onCheckoutFormChange() {
         .toISOString()
         .slice(0, 10);
       appendLabelAndValue('From: ', dateFormatter.format(rentFromDate));
+      hasDetail = true;
     }
   }
 
@@ -111,6 +113,7 @@ function onCheckoutFormChange() {
         .toISOString()
         .slice(0, 16);
       appendLabelAndValue('To: ', dateFormatter.format(rentToDate));
+      hasDetail = true;
     }
   }
 
@@ -129,13 +132,27 @@ function onCheckoutFormChange() {
     appendLabelAndValue('GST: ', currencyFormatter.format(gst));
     appendLabelAndValue('Total: ', currencyFormatter.format(grandTotal));
     preCalcTotalEl.value = grandTotal.toString();
+    hasDetail = true;
+  }
+
+  if (!hasDetail) {
+    const imgEl = document.createElement('img');
+    imgEl.src = car.imagePath;
+    imgEl.alt = carNameEl.innerText;
+
+    dynamicCheckoutContentDiv.appendChild(imgEl);
+
+    const priceEl = document.createElement('h2');
+    priceEl.textContent = `SGD ${car.price} per day`;
+
+    dynamicCheckoutContentDiv.appendChild(priceEl);
   }
 
   if (placeIdStr && dynamicCheckoutMapDiv.dataset.placeid !== placeIdStr) {
     const office = OFFICE_PLACES.find(({ id }) => id === placeIdStr);
     if (office) {
       dynamicCheckoutMapDiv.dataset.placeid = placeIdStr;
-      dynamicCheckoutMapDiv.innerHTML = `<label>Pick Up and Return: </label>\n`;
+      dynamicCheckoutMapDiv.innerHTML = ``;
       dynamicCheckoutMapDiv.appendChild(createGoogleMapEmbed(office));
     }
   }

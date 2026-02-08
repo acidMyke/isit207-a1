@@ -38,72 +38,75 @@
           onsubmit="processCheckout(event)"
           onchange="onCheckoutFormChange(event)"
         >
-          <img id="carImage" />
-          <input type="hidden" name="carid" id="carid" />
-          <div class="formfield">
-            <label for="from">From</label>
-            <input id="from" name="rentFrom" type="datetime-local" required />
-            <p>Please select a valid start date</p>
-          </div>
-          <div class="formfield">
-            <label for="to">To</label>
-            <input id="to" name="rentTo" type="date" required />
-            <p>Please select a valid end date</p>
-          </div>
-          <div class="formfield">
-            <label for="cc-number">Card number</label>
-            <input
-              id="cc-number"
-              name="cc"
-              type="text"
-              inputmode="numeric"
-              placeholder="1234567890123456"
-              pattern="[0-9]{16}"
-              maxlength="16"
-              minlength="16"
-              required
-            />
-            <p>Please enter a valid credit card number</p>
-          </div>
-          <div class="formfield">
-            <label>Expiry date</label>
-            <input
-              type="text"
-              inputmode="numeric"
-              placeholder="MM/YY"
-              maxlength="5"
-              minlength="5"
-              pattern="\d\d/\d\d"
-              required
-            />
-            <p>Invalid expiry date</p>
-          </div>
+          <div>
+            <input type="hidden" name="carid" id="carid" />
+            <div class="formfield">
+              <label for="from">From</label>
+              <input id="from" name="rentFrom" type="datetime-local" required />
+              <p>Please select a valid start date</p>
+            </div>
+            <div class="formfield">
+              <label for="to">To</label>
+              <input id="to" name="rentTo" type="date" required />
+              <p>Please select a valid end date</p>
+            </div>
+            <div class="formfield">
+              <label for="cc-number">Card number</label>
+              <input
+                id="cc-number"
+                name="cc"
+                type="text"
+                inputmode="numeric"
+                placeholder="1234567890123456"
+                pattern="[0-9]{16}"
+                maxlength="16"
+                minlength="16"
+                required
+              />
+              <p>Please enter a valid credit card number</p>
+            </div>
+            <div class="formfield">
+              <label>Expiry date</label>
+              <input
+                type="text"
+                inputmode="numeric"
+                placeholder="MM/YY"
+                maxlength="5"
+                minlength="5"
+                pattern="\d\d/\d\d"
+                required
+              />
+              <p>Invalid expiry date</p>
+            </div>
 
-          <div class="formfield">
-            <label for="cvc">CVC</label>
-            <input
-              id="cvc"
-              type="text"
-              inputmode="numeric"
-              maxlength="4"
-              placeholder="123"
-              required
-            />
-            <p>Invalid CVC</p>
-          </div>
-          <div class="formStatus"></div>
+            <div class="formfield">
+              <label for="cvc">CVC</label>
+              <input
+                id="cvc"
+                type="text"
+                inputmode="numeric"
+                maxlength="4"
+                placeholder="123"
+                required
+              />
+              <p>Invalid CVC</p>
+            </div>
+            <div class="formStatus"></div>
 
-          <div class="formfield">
-            <label for="placeIdSelect">Pick Up & Return location</label>
-            <select name="placeId" id="placeIdSelect"></select>
-          </div>
-          <div class="formStatus"></div>
+            <div class="formfield">
+              <label for="placeIdSelect">Pick Up & Return location</label>
+              <select name="placeId" id="placeIdSelect"></select>
+            </div>
+            <div class="formStatus"></div>
 
-          <h2>Summary:</h2>
-          <div class="formfield" id="dynamicCheckoutContent"></div>
-          <input type="hidden" name="preCalcTotal" id="preCalcTotal" />
-          <div class="formfield" id="dynamicCheckoutMap"></div>
-          <button class="btn-action-gradient" type="submit">Checkout</button>
+            <input type="hidden" name="preCalcTotal" id="preCalcTotal" />
+          </div>
+          <div>
+            <div id="dynamicCheckoutContent"></div>
+
+            <div id="dynamicCheckoutMap"></div>
+            <button class="btn-action-gradient" type="submit">Checkout</button>
+          </div>
         </form>
       </div>
     </main>
