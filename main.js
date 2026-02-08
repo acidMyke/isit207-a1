@@ -40,8 +40,6 @@
  * @property {string?} comment
  * @property {number?} penalty
  * @property {string} placeId
- * @property {'show' | 'auto' | 'hide'} accordionState
- * @property {number} updatedAt
  */
 
 const dateFormatter = Intl.DateTimeFormat('en-SG', {

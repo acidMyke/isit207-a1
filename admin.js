@@ -60,13 +60,22 @@ function initCars() {
 }
 
 function initStatusOption() {
-  const statusSelectEl = document.getElementById('bookingFilterStatus');
+  const statusSelectEl = /** @type {HTMLSelectElement} */ (
+    document.getElementById('bookingFilterStatus')
+  );
 
   if (!statusSelectEl) {
     return;
   }
 
   statusSelectEl.append(...generateStatusOptionEls(true));
+
+  for (const booking of bookings) {
+    if (booking.status === 'cancelled' || booking.status === 'returned') {
+      statusSelectEl.value = booking.status;
+      break;
+    }
+  }
 }
 
 /**
