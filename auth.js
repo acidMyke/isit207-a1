@@ -15,10 +15,11 @@ function setCurrentAccount(account) {
  * @param {SubmitEvent} event
  */
 function processLogin(event) {
-  if (!event || !event.target) return;
+  if (!event || !event.target || !(event.target instanceof HTMLFormElement))
+    return;
   event.preventDefault();
   const data = new FormData(event.target);
-  const namail = data.get('namail').trim();
+  const namail = /** @type {string} */ (data.get('namail')).trim();
   const password = data.get('password');
 
   if (namail.length === 0) {
@@ -45,12 +46,13 @@ function processLogin(event) {
  * @param {SubmitEvent} event
  */
 function processSignUp(event) {
-  if (!event || !event.target) return;
+  if (!event || !event.target || !(event.target instanceof HTMLFormElement))
+    return;
   event.preventDefault();
   const data = new FormData(event.target);
-  const name = data.get('name').trim();
-  const email = data.get('email').trim();
-  const password = data.get('password');
+  const name = /** @type {string} */ (data.get('name')).trim();
+  const email = /** @type {string} */ (data.get('email')).trim();
+  const password = /** @type {string} */ (data.get('password'));
 
   for (let xAcc of accounts) {
     if (xAcc.name === name) {
@@ -64,7 +66,14 @@ function processSignUp(event) {
     }
   }
 
-  const acc = { id: accounts.length.toString(), name, email, password };
+  /** @type {Account} */
+  const acc = {
+    id: accounts.length.toString(),
+    name,
+    email,
+    password,
+    loginMs: new Date().getTime(),
+  };
 
   accounts.push(acc);
   setCurrentAccount(acc);
