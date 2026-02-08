@@ -88,14 +88,14 @@ function initAccounts(accounts) {
   }
 }
 
-initFromLocalStorage(function main(data) {
-  const { accounts } = data;
-
+function initAdminPage() {
   initCars();
   initStatusOption();
   initAccounts(accounts);
   renderBookingList();
-});
+}
+
+initFromLocalStorage().then(() => initAdminPage());
 
 /**
  *

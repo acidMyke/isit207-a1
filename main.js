@@ -194,10 +194,7 @@ const localStorageInitPromise = new Promise(
   resolve => (localStorageInitPromiseResolved = () => resolve(undefined)),
 );
 
-/**
- * @param {((data: ReturnType<typeof saveToLocalStorage>) => void)} callback
- */
-function initFromLocalStorage(callback) {
+function initFromLocalStorage() {
   const dynamicDataJson = localStorage.getItem('dynamicData');
   if (dynamicDataJson) {
     try {
@@ -227,9 +224,9 @@ function initFromLocalStorage(callback) {
       }
     } catch {}
   }
-  callback(saveToLocalStorage());
   localStorageInitPromiseResolved();
   setInterval(() => saveToLocalStorage(), 20_000);
+  return localStorageInitPromise;
 }
 
 function saveToLocalStorage() {
