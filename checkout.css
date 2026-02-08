@@ -36,4 +36,8 @@ form {
     min-height: 2rem;
     background: var(--color-surface-alt);
   }
+
+  #dynamicCheckoutMap {
+    margin-top: 1rem;
+  }
 }

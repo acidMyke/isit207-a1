@@ -2,7 +2,12 @@ function initializeCarCheckout() {
   const caridInput = /** @type {HTMLInputElement | null} */ (
     document.getElementById('carid')
   );
-  if (!caridInput) {
+
+  const placeIdSelect = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById('placeIdSelect')
+  );
+
+  if (!caridInput || !placeIdSelect) {
     return;
   }
   const params = new URLSearchParams(location.search);
@@ -13,6 +18,14 @@ function initializeCarCheckout() {
   }
 
   caridInput.value = caridStr;
+
+  for (const { name, id } of OFFICE_PLACES) {
+    const optionEl = document.createElement('option');
+    optionEl.value = id;
+    optionEl.textContent = name;
+    placeIdSelect.appendChild(optionEl);
+  }
+
   onCheckoutFormChange();
 }
 
@@ -28,7 +41,10 @@ function onCheckoutFormChange() {
   const dynamicCheckoutContentDiv = /** @type {HTMLDivElement | null} */ (
     document.getElementById('dynamicCheckoutContent')
   );
-  if (!checkoutform || !dynamicCheckoutContentDiv) {
+  const dynamicCheckoutMapDiv = /** @type {HTMLDivElement | null} */ (
+    document.getElementById('dynamicCheckoutMap')
+  );
+  if (!checkoutform || !dynamicCheckoutContentDiv || !dynamicCheckoutMapDiv) {
     return;
   }
 
@@ -50,8 +66,7 @@ function onCheckoutFormChange() {
   const carIdStr = formData.get('carid');
   const rentFromStr = formData.get('rentFrom');
   const rentToStr = formData.get('rentTo');
-
-  console.log({ carIdStr, rentFromStr, rentToStr });
+  const placeIdStr = formData.get('placeId');
 
   const carId = parseInt(carIdStr);
   const car = carListing.find(({ id }) => id === carId);
@@ -115,6 +130,15 @@ function onCheckoutFormChange() {
     appendLabelAndValue('Total: ', currencyFormatter.format(grandTotal));
     preCalcTotalEl.value = grandTotal.toString();
   }
+
+  if (placeIdStr && dynamicCheckoutMapDiv.dataset.placeid !== placeIdStr) {
+    const office = OFFICE_PLACES.find(({ id }) => id === placeIdStr);
+    if (office) {
+      dynamicCheckoutMapDiv.dataset.placeid = placeIdStr;
+      dynamicCheckoutMapDiv.innerHTML = `<label>Pick Up and Return: </label>\n`;
+      dynamicCheckoutMapDiv.appendChild(createGoogleMapEmbed(office));
+    }
+  }
 }
 
 /**
@@ -130,8 +154,7 @@ function processCheckout(event) {
   const rentToStr = formData.get('rentTo');
   const ccStr = formData.get('cc');
   const preCalcTotalStr = formData.get('preCalcTotal');
-
-  console.log({ carIdStr, rentFromStr, rentToStr, preCalcTotalStr });
+  const placeIdStr = formData.get('placeId');
 
   const carId = parseInt(carIdStr);
   const car = carListing.find(({ id }) => id === carId);
@@ -152,10 +175,30 @@ function processCheckout(event) {
     checkedOutAt: new Date().getTime(),
     penalty: 0,
     photos: [],
+    placeId: placeIdStr,
   });
 
   carQty[carId.toString().padStart(2, '0')] -= 1;
   saveToLocalStorage();
 
   location.replace('/history.html');
+}
+
+/**
+ * @param {Place} place
+ */
+function createGoogleMapEmbed(place) {
+  const iframe = document.createElement('iframe');
+
+  const src = `https://www.google.com/maps?q=${place.latitude},${place.longitude}&z=15&output=embed`;
+
+  iframe.src = src;
+  iframe.width = '100%';
+  iframe.height = '300';
+  iframe.style.border = '0';
+  iframe.loading = 'lazy';
+  iframe.referrerPolicy = 'no-referrer-when-downgrade';
+  iframe.setAttribute('credentialless', '');
+
+  return iframe;
 }

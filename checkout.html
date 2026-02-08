@@ -39,7 +39,7 @@
           onchange="onCheckoutFormChange(event)"
         >
           <img id="carImage" />
-          <input type="hidden" name="carid" id="carid"/>
+          <input type="hidden" name="carid" id="carid" />
           <div class="formfield">
             <label for="from">From</label>
             <input id="from" name="rentFrom" type="datetime-local" required />
@@ -93,10 +93,16 @@
           </div>
           <div class="formStatus"></div>
 
-          <h2>Summary: </h2>
-          <div class="formfield" id="dynamicCheckoutContent">
+          <div class="formfield">
+            <label for="placeIdSelect">Pick Up & Return location</label>
+            <select name="placeId" id="placeIdSelect"></select>
           </div>
-          <input type="hidden" name="preCalcTotal" id="preCalcTotal">
+          <div class="formStatus"></div>
+
+          <h2>Summary:</h2>
+          <div class="formfield" id="dynamicCheckoutContent"></div>
+          <input type="hidden" name="preCalcTotal" id="preCalcTotal" />
+          <div class="formfield" id="dynamicCheckoutMap"></div>
           <button class="btn-action-gradient" type="submit">Checkout</button>
         </form>
       </div>

@@ -19,6 +19,14 @@
  */
 
 /**
+ * @typedef {Object} Place
+ * @property {string} id
+ * @property {string} name
+ * @property {string} latitude
+ * @property {string} longitude
+ */
+
+/**
  * @typedef {Object} Booking
  * @property {number} id
  * @property {number} carId
@@ -31,6 +39,9 @@
  * @property {number} checkedOutAt
  * @property {string?} comment
  * @property {number?} penalty
+ * @property {string} placeId
+ * @property {'show' | 'auto' | 'hide'} accordionState
+ * @property {number} updatedAt
  */
 
 const dateFormatter = Intl.DateTimeFormat('en-SG', {
@@ -93,6 +104,28 @@ let carListing = [
     model: 'GLE',
     price: 190,
     imagePath: 'images/cars/05-m-gle.avif',
+  },
+];
+
+/** @type {Place[]} */
+const OFFICE_PLACES = [
+  {
+    id: 'changi-airport',
+    name: 'Changi Airport T3',
+    latitude: '1.3560',
+    longitude: '103.9878',
+  },
+  {
+    id: 'orchard',
+    name: 'Orchard Road',
+    latitude: '1.3048',
+    longitude: '103.8318',
+  },
+  {
+    id: 'marina-bay',
+    name: 'Marina Bay Sands',
+    latitude: '1.2834',
+    longitude: '103.8607',
   },
 ];
 
